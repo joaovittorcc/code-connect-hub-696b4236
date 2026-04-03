@@ -179,6 +179,7 @@ export function useFriendly() {
     resolveFriendly,
     getPlayerHistory,
     getEloRanking,
+    setManualElo,
     resetFriendly,
   };
 }
