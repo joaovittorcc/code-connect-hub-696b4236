@@ -46,7 +46,7 @@ const ManagePilotModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="card-racing border-border max-w-sm">
+      <DialogContent className="bg-card border-border max-w-sm neon-border">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider font-['Orbitron'] neon-text-pink">
             <UserCog className="h-4 w-4" />
