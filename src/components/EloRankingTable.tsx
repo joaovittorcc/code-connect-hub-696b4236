@@ -1,5 +1,6 @@
 import { Trophy, TrendingUp, TrendingDown, Medal, Flame } from 'lucide-react';
 import { FriendlyMatch } from '@/types/championship';
+import RoleBadge from '@/components/RoleBadge';
 
 interface EloRankingEntry {
   name: string;
