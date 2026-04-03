@@ -277,11 +277,14 @@ const Index = () => {
         {/* INÍCIO */}
         {activeTab === 'inicio' && (
           <div className="space-y-6">
-            <div className="text-center space-y-3 pt-6">
-              <img src={midclubLogo} alt="Midnight Club" className="h-[25rem] w-auto mx-auto animate-float drop-shadow-[0_0_30px_hsl(280_100%_65%_/_0.3)]" />
-              <h2 className="text-3xl md:text-4xl font-black tracking-wider uppercase neon-text-purple font-['Orbitron'] animate-fade-in-up animate-fill-both stagger-1">
-                Midnight Club
-              </h2>
+            <div className="text-center space-y-3 pt-6 relative kanji-watermark">
+              <img src={midclubLogo} alt="Midnight Club" className="h-[25rem] w-auto mx-auto animate-float drop-shadow-[0_0_30px_hsl(280_100%_65%_/_0.3)] relative z-10" />
+              <div className="flex items-center justify-center gap-3">
+                <h2 className="text-3xl md:text-4xl font-black tracking-wider uppercase neon-text-purple font-['Orbitron'] animate-fade-in-up animate-fill-both stagger-1">
+                  Midnight Club
+                </h2>
+                <span className="kanji-accent text-3xl md:text-4xl neon-text-purple animate-fade-in-up animate-fill-both stagger-2">夜中</span>
+              </div>
               <p className="text-lg font-bold uppercase tracking-[0.2em] text-accent font-['Orbitron'] animate-fade-in-up animate-fill-both stagger-2">
                 Campeonato Interno
               </p>
@@ -290,21 +293,21 @@ const Index = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto animate-fade-in-up animate-fill-both stagger-3">
               <Button
-                className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-primary/20 text-primary hover:bg-primary/30 border border-primary/30 font-['Orbitron'] hover-scale neon-border transition-all duration-300"
+                className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-primary/20 text-primary hover:bg-primary/30 border border-primary/30 font-['Orbitron'] hover-lift neon-border transition-all duration-300"
                 onClick={() => setActiveTab('lista')}
               >
                 <ListOrdered className="h-4 w-4 mr-2" />
                 Ver Listas
               </Button>
               <Button
-                className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 font-['Orbitron'] hover-scale transition-all duration-300"
+                className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 font-['Orbitron'] hover-lift transition-all duration-300"
                 onClick={() => setActiveTab('amistosos')}
               >
                 <Flame className="h-4 w-4 mr-2" />
                 Amistosos
               </Button>
               <Button
-                className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-accent/20 text-accent hover:bg-accent/30 border border-accent/30 font-['Orbitron'] hover-scale neon-border-pink transition-all duration-300"
+                className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-accent/20 text-accent hover:bg-accent/30 border border-accent/30 font-['Orbitron'] hover-lift neon-border-pink transition-all duration-300"
                 onClick={() => setActiveTab('ranking')}
               >
                 <Trophy className="h-4 w-4 mr-2" />
