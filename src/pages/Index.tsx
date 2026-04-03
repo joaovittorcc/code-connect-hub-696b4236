@@ -58,6 +58,13 @@ const Index = () => {
     const stored = localStorage.getItem('mc-pilot-auth');
     return stored ? JSON.parse(stored) : null;
   });
+  const [managePilotName, setManagePilotName] = useState<string | null>(null);
+  const [roleOverrides, setRoleOverrides] = useState<Record<string, PilotRole>>(() => {
+    try {
+      const saved = localStorage.getItem('mc-role-overrides');
+      return saved ? JSON.parse(saved) : {};
+    } catch { return {}; }
+  });
 
   const isRegistered = loggedNick ? isPlayerInLists(loggedNick) : false;
   const isExternal = loggedNick ? !isRegistered : false;
