@@ -3,6 +3,7 @@ import PlayerList from '@/components/PlayerList';
 import AdminPanel from '@/components/AdminPanel';
 import EloRankingTable from '@/components/EloRankingTable';
 import FriendlyPanel from '@/components/FriendlyPanel';
+import ManagePilotModal from '@/components/ManagePilotModal';
 import { useChampionship } from '@/hooks/useChampionship';
 import { useFriendly } from '@/hooks/useFriendly';
 import { toast } from '@/hooks/use-toast';
@@ -10,7 +11,8 @@ import { LogIn, Crown, ListOrdered, Home, Trophy, Flag, Flame } from 'lucide-rea
 import midclubLogo from '@/assets/midclub-logo.png';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { authenticateUser, type AuthUser } from '@/data/users';
+import { authenticateUser, getUserByName, type AuthUser, type PilotRole } from '@/data/users';
+import RoleBadge from '@/components/RoleBadge';
 
 type TabId = 'inicio' | 'lista' | 'amistosos' | 'campeonato' | 'ranking';
 type CampeonatoSub = 'ativo' | 'historico';
