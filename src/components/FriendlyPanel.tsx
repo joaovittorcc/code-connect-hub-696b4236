@@ -192,12 +192,13 @@ const FriendlyPanel = ({
       </div>
 
       {/* ELO Leaderboard Mini */}
-      <div className="card-racing rounded-xl neon-border overflow-hidden">
+      <div className="card-racing rounded-xl neon-border overflow-hidden hover-lift">
         <div className="bg-secondary/80 px-5 py-4 border-b border-border flex items-center gap-2">
           <Zap className="h-4 w-4 text-primary" />
           <h2 className="text-xs font-bold tracking-[0.2em] uppercase neon-text-purple font-['Orbitron']">
             Top ELO
           </h2>
+          <span className="ml-1 kanji-accent text-[10px] text-primary/30">夜</span>
         </div>
         <div className="p-3">
           {allPlayerNames
