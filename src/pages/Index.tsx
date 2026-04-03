@@ -45,6 +45,7 @@ const Index = () => {
     rejectFriendly,
     resolveFriendly,
     getEloRanking,
+    setManualElo,
   } = useFriendly();
 
   const [activeTab, setActiveTab] = useState<TabId>('inicio');
