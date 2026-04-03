@@ -532,6 +532,20 @@ const Index = () => {
           </div>
         )}
       </main>
+
+      {/* Admin: Manage Pilot Modal */}
+      {managePilotName && (
+        <ManagePilotModal
+          open={!!managePilotName}
+          onOpenChange={(open) => { if (!open) setManagePilotName(null); }}
+          pilotName={managePilotName}
+          currentRole={getPilotRole(managePilotName)}
+          currentElo={getPlayerElo(managePilotName)}
+          onChangeRole={handleChangeRole}
+          onEditElo={handleEditElo}
+          onResetCooldown={handleResetPilotCooldown}
+        />
+      )}
     </div>
   );
 };
