@@ -202,9 +202,12 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <img src={midclubLogo} alt="Midnight Club" className="h-[4.5rem] w-auto hover-scale" />
               <div className="hidden sm:block">
-                <h1 className="text-lg font-black tracking-wider uppercase neon-text-purple font-['Orbitron'] leading-tight">
-                  Midnight Club
-                </h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg font-black tracking-wider uppercase neon-text-purple font-['Orbitron'] leading-tight">
+                    Midnight Club
+                  </h1>
+                  <span className="kanji-accent text-lg text-primary/50 leading-tight">夜中</span>
+                </div>
                 <p className="text-[9px] tracking-[0.3em] uppercase text-muted-foreground font-bold">
                   Campeonato Interno
                 </p>
