@@ -58,12 +58,13 @@ const FriendlyPanel = ({
   return (
     <div className="space-y-6">
       {/* Challenge Card */}
-      <div className="card-racing rounded-xl neon-border overflow-hidden animate-glow-breathe">
+      <div className="card-racing rounded-xl neon-border overflow-hidden animate-glow-breathe hover-lift">
         <div className="bg-secondary/80 px-5 py-4 border-b border-border flex items-center gap-2">
           <Flame className="h-4 w-4 text-orange-400" />
           <h2 className="text-xs font-bold tracking-[0.2em] uppercase neon-text-pink font-['Orbitron']">
             Desafio Amistoso
           </h2>
+          <span className="ml-1 kanji-accent text-[10px] text-accent/40">夜中</span>
         </div>
 
         <div className="p-5 space-y-4">
