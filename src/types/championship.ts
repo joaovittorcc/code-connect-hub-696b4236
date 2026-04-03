@@ -24,7 +24,7 @@ export interface Challenge {
   challengerPos: number;
   challengedPos: number;
   status: 'pending' | 'racing' | 'completed';
-  type: 'ladder' | 'initiation';
+  type: 'ladder' | 'initiation' | 'friendly';
   createdAt: number;
   tracks?: [string, string, string];
   score?: [number, number];
@@ -34,8 +34,28 @@ export interface JokerProgress {
   [jokerUsername: string]: string[];
 }
 
+export interface FriendlyMatch {
+  id: string;
+  challengerName: string;
+  challengedName: string;
+  winnerName: string;
+  loserName: string;
+  challengerEloBefore: number;
+  challengedEloBefore: number;
+  challengerEloAfter: number;
+  challengedEloAfter: number;
+  eloChange: number;
+  createdAt: number;
+}
+
+export interface EloRatings {
+  [playerName: string]: number;
+}
+
 export interface ChampionshipState {
   lists: PlayerList[];
   challenges: Challenge[];
   jokerProgress: JokerProgress;
+  friendlyMatches: FriendlyMatch[];
+  eloRatings: EloRatings;
 }
