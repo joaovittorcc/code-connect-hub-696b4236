@@ -32,9 +32,14 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
     <div className="space-y-6">
       {/* Top 3 Podium */}
       {rankings.length >= 3 && (
-        <div className="flex items-end justify-center gap-3 pt-4 pb-2">
+        <div className="relative flex items-end justify-center gap-4 pt-6 pb-4">
+          {/* Kanji watermark behind podium */}
+          <span className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+            <span className="kanji-accent text-[10rem] leading-none text-primary/[0.03]">夜中</span>
+          </span>
+
           {/* 2nd place */}
-          <div className={`flex flex-col items-center gap-2 p-4 rounded-xl border ${medalColors[1].bg} ${medalColors[1].border} ${medalColors[1].shadow} w-28 animate-fade-in-up animate-fill-both stagger-1`}>
+          <div className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border ${medalColors[1].bg} ${medalColors[1].border} ${medalColors[1].shadow} w-28 hover-lift animate-fade-in-up animate-fill-both stagger-1`}>
             <span className="text-2xl">{medalColors[1].label}</span>
             <span className={`text-xs font-bold tracking-wide ${medalColors[1].text}`}>
               {rankings[1].name}
@@ -43,16 +48,17 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
             <span className="text-[10px] text-muted-foreground">{rankings[1].wins}V / {rankings[1].losses}D</span>
           </div>
           {/* 1st place */}
-          <div className={`flex flex-col items-center gap-2 p-5 rounded-xl border ${medalColors[0].bg} ${medalColors[0].border} ${medalColors[0].shadow} w-32 -mb-2 animate-fade-in-up animate-fill-both animate-glow-breathe`}>
+          <div className={`relative flex flex-col items-center gap-2 p-5 rounded-xl border ${medalColors[0].bg} ${medalColors[0].border} ${medalColors[0].shadow} w-36 -mb-2 hover-lift animate-fade-in-up animate-fill-both animate-glow-breathe`}>
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 kanji-accent text-xs text-yellow-400/60 tracking-widest">夜中</span>
             <span className="text-3xl animate-float">{medalColors[0].label}</span>
-            <span className={`text-sm font-bold tracking-wide neon-text-pink`}>
+            <span className="text-sm font-bold tracking-wide neon-text-gold">
               {rankings[0].name}
             </span>
             <span className="text-2xl font-black font-['Orbitron'] neon-text-purple">{rankings[0].elo}</span>
             <span className="text-[10px] text-muted-foreground">{rankings[0].wins}V / {rankings[0].losses}D</span>
           </div>
           {/* 3rd place */}
-          <div className={`flex flex-col items-center gap-2 p-4 rounded-xl border ${medalColors[2].bg} ${medalColors[2].border} ${medalColors[2].shadow} w-28 animate-fade-in-up animate-fill-both stagger-2`}>
+          <div className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border ${medalColors[2].bg} ${medalColors[2].border} ${medalColors[2].shadow} w-28 hover-lift animate-fade-in-up animate-fill-both stagger-2`}>
             <span className="text-2xl">{medalColors[2].label}</span>
             <span className={`text-xs font-bold tracking-wide ${medalColors[2].text}`}>
               {rankings[2].name}
@@ -64,20 +70,21 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
       )}
 
       {/* Full Ranking Table */}
-      <div className="card-racing rounded-xl neon-border overflow-hidden">
+      <div className="card-racing rounded-xl neon-border overflow-hidden kanji-watermark-sm">
         <div className="bg-secondary/80 px-5 py-4 border-b border-border flex items-center gap-2">
           <Trophy className="h-4 w-4 text-yellow-400" />
           <h2 className="text-xs font-bold tracking-[0.2em] uppercase neon-text-pink font-['Orbitron']">
             Ranking ELO — Amistosos
           </h2>
+          <span className="ml-1 kanji-accent text-[10px] text-primary/40">夜中</span>
           <Flame className="h-4 w-4 text-orange-400 ml-auto animate-neon-pulse" />
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm table-auto-layout">
             <thead>
               <tr className="border-b border-border text-[10px] uppercase tracking-wider text-muted-foreground">
-                <th className="px-4 py-3 text-left font-bold">#</th>
+                <th className="px-4 py-3 text-left font-bold w-14">#</th>
                 <th className="px-4 py-3 text-left font-bold">Piloto</th>
                 <th className="px-4 py-3 text-center font-bold">Pontuação</th>
                 <th className="px-4 py-3 text-center font-bold">V/D</th>
@@ -87,13 +94,13 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
               {rankings.map((entry, i) => (
                 <tr
                   key={entry.name}
-                  className={`transition-colors hover:bg-secondary/60 ${
-                    i === 0 ? 'bg-yellow-400/5' : i === 1 ? 'bg-gray-300/5' : i === 2 ? 'bg-orange-400/5' : ''
+                  className={`transition-all duration-200 hover:bg-secondary/60 hover:translate-x-1 ${
+                    i === 0 ? 'first-place-row' : i === 1 ? 'bg-gray-300/5' : i === 2 ? 'bg-orange-400/5' : ''
                   }`}
                 >
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold font-['Orbitron'] ${
-                      i === 0 ? 'bg-yellow-400/20 text-yellow-400' :
+                      i === 0 ? 'bg-yellow-400/20 text-yellow-400 neon-border-gold' :
                       i === 1 ? 'bg-gray-300/20 text-gray-300' :
                       i === 2 ? 'bg-orange-400/20 text-orange-400' :
                       'bg-muted/40 text-muted-foreground'
@@ -101,22 +108,22 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
                       {i < 3 ? medalColors[i].label : i + 1}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
-                      <span className={`font-semibold tracking-wide ${i === 0 ? 'neon-text-pink' : i < 3 ? 'text-foreground' : ''}`}>
+                      <span className={`font-semibold tracking-wide ${i === 0 ? 'neon-text-gold text-base' : i < 3 ? 'text-foreground' : ''}`}>
                         {entry.name}
                       </span>
                       <RoleBadge playerName={entry.name} />
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-4 py-3 text-center whitespace-nowrap">
                     <span className={`text-sm font-black font-['Orbitron'] ${
-                      i === 0 ? 'neon-text-purple' : 'text-primary'
+                      i === 0 ? 'neon-text-purple text-base' : 'text-primary'
                     }`}>
                       {entry.elo}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-4 py-3 text-center whitespace-nowrap">
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-primary font-bold flex items-center gap-0.5 text-xs">
                         <TrendingUp className="h-3 w-3" /> {entry.wins}
@@ -140,7 +147,7 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
         )}
       </div>
 
-      {/* Match History per player (expanded below ranking) */}
+      {/* Match History per player */}
       {rankings.length > 0 && (
         <div className="card-racing rounded-xl neon-border overflow-hidden">
           <div className="bg-secondary/80 px-5 py-4 border-b border-border flex items-center gap-2">
@@ -148,15 +155,16 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
             <h2 className="text-xs font-bold tracking-[0.2em] uppercase neon-text-purple font-['Orbitron']">
               Histórico por Piloto
             </h2>
+            <span className="ml-1 kanji-accent text-[10px] text-accent/40">中</span>
           </div>
           <div className="divide-y divide-border/50">
-            {rankings.slice(0, 10).map(entry => {
+            {rankings.slice(0, 10).map((entry, idx) => {
               const history = getPlayerHistory(entry.name);
               if (history.length === 0) return null;
               return (
-                <div key={entry.name} className="px-4 py-3 space-y-2">
+                <div key={entry.name} className={`px-4 py-3 space-y-2 transition-colors hover:bg-secondary/40 ${idx === 0 ? 'first-place-row' : ''}`}>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-foreground">{entry.name}</span>
+                    <span className={`text-xs font-bold ${idx === 0 ? 'neon-text-gold' : 'text-foreground'}`}>{entry.name}</span>
                     <span className="text-[10px] text-muted-foreground font-['Orbitron']">{entry.elo} ELO</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -166,7 +174,7 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
                       return (
                         <span
                           key={match.id}
-                          className={`text-[9px] px-2 py-1 rounded-full border font-bold uppercase tracking-wider ${
+                          className={`text-[9px] px-2 py-1 rounded-full border font-bold uppercase tracking-wider transition-transform hover:scale-105 ${
                             isWinner
                               ? 'border-primary/30 bg-primary/10 text-primary'
                               : 'border-destructive/30 bg-destructive/10 text-destructive'
