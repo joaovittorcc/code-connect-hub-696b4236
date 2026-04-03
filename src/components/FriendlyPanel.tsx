@@ -239,7 +239,7 @@ const FriendlyPanel = ({
           </div>
           <div className="divide-y divide-border/50">
             {last5Matches.map(match => (
-              <div key={match.id} className="px-4 py-3 flex items-center gap-3">
+              <div key={match.id} className="px-4 py-3 flex items-center gap-3 transition-colors hover:bg-secondary/40">
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2 text-xs">
                     <span className={`font-bold ${match.winnerName === match.challengerName ? 'neon-text-pink' : ''}`}>
