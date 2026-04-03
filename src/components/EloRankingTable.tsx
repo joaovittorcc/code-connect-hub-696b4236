@@ -102,9 +102,12 @@ const EloRankingTable = ({ rankings, matches }: EloRankingTableProps) => {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`font-semibold tracking-wide ${i === 0 ? 'neon-text-pink' : i < 3 ? 'text-foreground' : ''}`}>
-                      {entry.name}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className={`font-semibold tracking-wide ${i === 0 ? 'neon-text-pink' : i < 3 ? 'text-foreground' : ''}`}>
+                        {entry.name}
+                      </span>
+                      <RoleBadge playerName={entry.name} />
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={`text-sm font-black font-['Orbitron'] ${
