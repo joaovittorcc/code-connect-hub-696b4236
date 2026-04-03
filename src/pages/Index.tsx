@@ -3,6 +3,7 @@ import PlayerList from '@/components/PlayerList';
 import AdminPanel from '@/components/AdminPanel';
 import EloRankingTable from '@/components/EloRankingTable';
 import FriendlyPanel from '@/components/FriendlyPanel';
+import ManagePilotModal from '@/components/ManagePilotModal';
 import { useChampionship } from '@/hooks/useChampionship';
 import { useFriendly } from '@/hooks/useFriendly';
 import { toast } from '@/hooks/use-toast';
@@ -10,7 +11,8 @@ import { LogIn, Crown, ListOrdered, Home, Trophy, Flag, Flame } from 'lucide-rea
 import midclubLogo from '@/assets/midclub-logo.png';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { authenticateUser, type AuthUser } from '@/data/users';
+import { authenticateUser, getUserByName, type AuthUser, type PilotRole } from '@/data/users';
+import RoleBadge from '@/components/RoleBadge';
 
 type TabId = 'inicio' | 'lista' | 'amistosos' | 'campeonato' | 'ranking';
 type CampeonatoSub = 'ativo' | 'historico';
@@ -43,6 +45,7 @@ const Index = () => {
     rejectFriendly,
     resolveFriendly,
     getEloRanking,
+    setManualElo,
   } = useFriendly();
 
   const [activeTab, setActiveTab] = useState<TabId>('inicio');
@@ -55,6 +58,13 @@ const Index = () => {
   const [loggedAuth, setLoggedAuth] = useState<AuthUser | null>(() => {
     const stored = localStorage.getItem('mc-pilot-auth');
     return stored ? JSON.parse(stored) : null;
+  });
+  const [managePilotName, setManagePilotName] = useState<string | null>(null);
+  const [roleOverrides, setRoleOverrides] = useState<Record<string, PilotRole>>(() => {
+    try {
+      const saved = localStorage.getItem('mc-role-overrides');
+      return saved ? JSON.parse(saved) : {};
+    } catch { return {}; }
   });
 
   const isRegistered = loggedNick ? isPlayerInLists(loggedNick) : false;
@@ -79,7 +89,7 @@ const Index = () => {
       toast({ title: '🚫 Acesso Negado', description: 'Usuário ou Senha incorretos.', variant: 'destructive' });
       return;
     }
-    const displayName = loginUser.trim();
+    const displayName = user.displayName;
     setLoggedNick(displayName);
     setLoggedAuth(user);
     localStorage.setItem('mc-pilot-nick', displayName);
@@ -139,6 +149,36 @@ const Index = () => {
     toast({ title: '🏆 Amistoso Finalizado!', description: `${winnerName} venceu! Pontuação ELO atualizada.` });
   };
 
+  const handleChangeRole = (name: string, newRole: PilotRole) => {
+    const updated = { ...roleOverrides, [name.toLowerCase()]: newRole };
+    setRoleOverrides(updated);
+    localStorage.setItem('mc-role-overrides', JSON.stringify(updated));
+    toast({ title: '✅ Cargo Alterado', description: `${name} agora é ${newRole}` });
+  };
+
+  const handleEditElo = (name: string, newElo: number) => {
+    setManualElo(name, newElo);
+    toast({ title: '✅ ELO Atualizado', description: `${name}: ${newElo} pontos` });
+  };
+
+  const handleResetPilotCooldown = (name: string) => {
+    const allPlayers = lists.flatMap(l => l.players);
+    const player = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if (player) {
+      setPlayerStatus(player.id, 'available');
+      toast({ title: '🛡️ Cooldown Resetado', description: `${name} está disponível!` });
+    }
+  };
+
+  const getPilotRole = (name: string): PilotRole => {
+    const override = roleOverrides[name.toLowerCase()];
+    if (override) return override;
+    const user = getUserByName(name);
+    return user?.role ?? 'night-driver';
+  };
+
+  const managedPilotUser = managePilotName ? getUserByName(managePilotName) : undefined;
+
   const initiationList = lists.find(l => l.id === 'initiation');
   const list01 = lists.find(l => l.id === 'list-01');
   const list02 = lists.find(l => l.id === 'list-02');
@@ -176,15 +216,9 @@ const Index = () => {
                 <div className="flex items-center gap-2">
                   {isAdmin && <Crown className="h-4 w-4 text-yellow-400" />}
                   <span className="text-xs font-bold text-accent tracking-wider uppercase">
-                    {loggedNick}{isAdmin ? ' [ADMIN]' : ''}
+                    {loggedNick}
                   </span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider
-                    ${isExternal
-                      ? 'text-muted-foreground border-border bg-muted/30'
-                      : 'text-primary border-primary/30 bg-primary/10'
-                    }`}>
-                    {isExternal ? 'Externo' : 'Piloto'}
-                  </span>
+                  {loggedAuth && <RoleBadge playerName={loggedNick!} role={getPilotRole(loggedNick!)} size="md" />}
                   <Button size="sm" variant="ghost" className="text-[10px] text-muted-foreground h-7" onClick={handleLogout}>
                     Sair
                   </Button>
@@ -396,6 +430,7 @@ const Index = () => {
                     isAdmin={isAdmin}
                     loggedNick={loggedNick}
                     onSetPlayerStatus={isAdmin ? setPlayerStatus : undefined}
+                    onManagePilot={isAdmin ? setManagePilotName : undefined}
                     highlight
                   />
                 )}
@@ -411,6 +446,7 @@ const Index = () => {
                     isAdmin={isAdmin}
                     loggedNick={loggedNick}
                     onSetPlayerStatus={isAdmin ? setPlayerStatus : undefined}
+                    onManagePilot={isAdmin ? setManagePilotName : undefined}
                   />
                 )}
               </div>
@@ -496,6 +532,20 @@ const Index = () => {
           </div>
         )}
       </main>
+
+      {/* Admin: Manage Pilot Modal */}
+      {managePilotName && (
+        <ManagePilotModal
+          open={!!managePilotName}
+          onOpenChange={(open) => { if (!open) setManagePilotName(null); }}
+          pilotName={managePilotName}
+          currentRole={getPilotRole(managePilotName)}
+          currentElo={getPlayerElo(managePilotName)}
+          onChangeRole={handleChangeRole}
+          onEditElo={handleEditElo}
+          onResetCooldown={handleResetPilotCooldown}
+        />
+      )}
     </div>
   );
 };

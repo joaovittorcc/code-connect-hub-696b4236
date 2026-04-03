@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Player } from '@/types/championship';
-import { Clock, Swords, Zap, Crown, Shield, Settings2, Check } from 'lucide-react';
+import { Clock, Swords, Zap, Crown, Shield, Settings2, Check, UserCog } from 'lucide-react';
+import RoleBadge from '@/components/RoleBadge';
 import { Button } from '@/components/ui/button';
 import {
   DndContext,
@@ -39,6 +40,7 @@ interface PlayerListProps {
   loggedNick?: string | null;
   onSetPlayerStatus?: (playerId: string, status: 'available' | 'racing' | 'cooldown') => void;
   jokerDefeatedIds?: string[];
+  onManagePilot?: (playerName: string) => void;
 }
 
 function SortablePlayer({
@@ -55,6 +57,7 @@ function SortablePlayer({
   isValidTarget,
   onSetPlayerStatus,
   isDefeatedByJoker,
+  onManagePilot,
 }: {
   player: Player;
   index: number;
@@ -69,6 +72,7 @@ function SortablePlayer({
   isValidTarget: boolean;
   onSetPlayerStatus?: (playerId: string, status: 'available' | 'racing' | 'cooldown') => void;
   isDefeatedByJoker?: boolean;
+  onManagePilot?: (playerName: string) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: player.id, disabled: !isAdmin });
   const style = { transform: CSS.Transform.toString(transform), transition };
@@ -114,13 +118,16 @@ function SortablePlayer({
         </span>
       )}
 
-      <span className={`font-semibold text-sm flex-1 tracking-wide transition-all
-        ${isDefeatedByJoker ? 'text-green-400/70 line-through' : ''}
-        ${isRacing && !isDefeatedByJoker ? 'neon-text-pink' : ''}
-        ${!isRacing && !isDefeatedByJoker ? 'text-foreground group-hover:neon-text-pink' : ''}
-      `}>
-          {player.name === 'Santi' ? 'Sant' : player.name === 'Rox' ? 'Rocxs' : player.name}
-      </span>
+      <div className="flex items-center gap-1.5 flex-1 min-w-0">
+        <span className={`font-semibold text-sm tracking-wide transition-all truncate
+          ${isDefeatedByJoker ? 'text-green-400/70 line-through' : ''}
+          ${isRacing && !isDefeatedByJoker ? 'neon-text-pink' : ''}
+          ${!isRacing && !isDefeatedByJoker ? 'text-foreground group-hover:neon-text-pink' : ''}
+        `}>
+          {player.name}
+        </span>
+        <RoleBadge playerName={player.name} />
+      </div>
 
       <div className="flex items-center gap-1.5 shrink-0">
         {/* Admin status control dropdown */}
@@ -159,7 +166,19 @@ function SortablePlayer({
           </DropdownMenu>
         )}
 
-        {/* Initiation: show Desafiar for joker/external — but NOT if already defeated */}
+        {/* Admin: Manage Pilot button */}
+        {isAdmin && !isInitiation && onManagePilot && (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-6 w-6 p-0 text-muted-foreground hover:text-accent"
+            onClick={e => { e.stopPropagation(); onManagePilot(player.name); }}
+          >
+            <UserCog className="h-3 w-3" />
+          </Button>
+        )}
+
+
         {isLoggedIn && isInitiation && (isExternal || isJoker) && onChallengeInitiation && !isDefeatedByJoker && (
           <Button
             size="sm"
@@ -258,6 +277,7 @@ const PlayerList = ({
   loggedNick,
   onSetPlayerStatus,
   jokerDefeatedIds = [],
+  onManagePilot,
 }: PlayerListProps) => {
   const [challengerIdx, setChallengerIdx] = useState<number | null>(null);
   const [selectedOpponentIdx, setSelectedOpponentIdx] = useState<number | null>(null);
@@ -357,6 +377,7 @@ const PlayerList = ({
                 }
                 onSetPlayerStatus={onSetPlayerStatus}
                 isDefeatedByJoker={isJoker && jokerDefeatedIds.includes(player.id)}
+                onManagePilot={onManagePilot}
               />
             ))}
           </ul>

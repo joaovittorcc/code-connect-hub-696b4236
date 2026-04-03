@@ -154,6 +154,14 @@ export function useFriendly() {
     return rankings;
   }, [state.eloRatings, state.matches]);
 
+  const setManualElo = useCallback((name: string, elo: number) => {
+    setState(prev => {
+      const newRatings = { ...prev.eloRatings };
+      newRatings[name.toLowerCase()] = elo;
+      return { ...prev, eloRatings: newRatings };
+    });
+  }, []);
+
   const resetFriendly = useCallback(() => {
     setState(defaultState);
     localStorage.removeItem(FRIENDLY_STORAGE_KEY);
@@ -171,6 +179,7 @@ export function useFriendly() {
     resolveFriendly,
     getPlayerHistory,
     getEloRanking,
+    setManualElo,
     resetFriendly,
   };
 }
