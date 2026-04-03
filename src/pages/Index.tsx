@@ -148,6 +148,36 @@ const Index = () => {
     toast({ title: '🏆 Amistoso Finalizado!', description: `${winnerName} venceu! Pontuação ELO atualizada.` });
   };
 
+  const handleChangeRole = (name: string, newRole: PilotRole) => {
+    const updated = { ...roleOverrides, [name.toLowerCase()]: newRole };
+    setRoleOverrides(updated);
+    localStorage.setItem('mc-role-overrides', JSON.stringify(updated));
+    toast({ title: '✅ Cargo Alterado', description: `${name} agora é ${newRole}` });
+  };
+
+  const handleEditElo = (name: string, newElo: number) => {
+    setManualElo(name, newElo);
+    toast({ title: '✅ ELO Atualizado', description: `${name}: ${newElo} pontos` });
+  };
+
+  const handleResetPilotCooldown = (name: string) => {
+    const allPlayers = lists.flatMap(l => l.players);
+    const player = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if (player) {
+      setPlayerStatus(player.id, 'available');
+      toast({ title: '🛡️ Cooldown Resetado', description: `${name} está disponível!` });
+    }
+  };
+
+  const getPilotRole = (name: string): PilotRole => {
+    const override = roleOverrides[name.toLowerCase()];
+    if (override) return override;
+    const user = getUserByName(name);
+    return user?.role ?? 'night-driver';
+  };
+
+  const managedPilotUser = managePilotName ? getUserByName(managePilotName) : undefined;
+
   const initiationList = lists.find(l => l.id === 'initiation');
   const list01 = lists.find(l => l.id === 'list-01');
   const list02 = lists.find(l => l.id === 'list-02');
