@@ -403,26 +403,27 @@ const Index = () => {
         {/* LISTA */}
         {activeTab === 'lista' && (
           <div className="animate-fade-in-up animate-fill-both">
-            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_240px] gap-6 items-start max-w-6xl mx-auto">
-              <div className="lg:sticky lg:top-[120px] animate-fade-in-up animate-fill-both stagger-1">
-                {initiationList && (
-                  <PlayerList
-                    listId={initiationList.id}
-                    title={initiationList.title}
-                    players={initiationList.players}
-                    onChallenge={handleChallenge(initiationList.id)}
-                    onReorder={(a, b) => reorderPlayers(initiationList.id, a, b)}
-                    isInitiation
-                    isExternal={isExternal}
-                    isJoker={isJoker}
-                    isAdmin={isAdmin}
-                    loggedNick={loggedNick}
-                    onChallengeInitiation={(isExternal || isJoker) ? handleChallengeInitiation : undefined}
-                    jokerDefeatedIds={isJoker ? jokerDefeatedIds : []}
-                  />
-                )}
+            {/* Initiation List - Full width on top */}
+            {initiationList && (
+              <div className="max-w-md mx-auto mb-6 animate-fade-in-up animate-fill-both stagger-1">
+                <PlayerList
+                  listId={initiationList.id}
+                  title={initiationList.title}
+                  players={initiationList.players}
+                  onChallenge={handleChallenge(initiationList.id)}
+                  onReorder={(a, b) => reorderPlayers(initiationList.id, a, b)}
+                  isInitiation
+                  isExternal={isExternal}
+                  isJoker={isJoker}
+                  isAdmin={isAdmin}
+                  loggedNick={loggedNick}
+                  onChallengeInitiation={(isExternal || isJoker) ? handleChallengeInitiation : undefined}
+                  jokerDefeatedIds={isJoker ? jokerDefeatedIds : []}
+                />
               </div>
+            )}
 
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-6 items-start max-w-5xl mx-auto">
               <div className="space-y-6 animate-fade-in-up animate-fill-both stagger-2">
                 {list01 && (
                   <PlayerList
