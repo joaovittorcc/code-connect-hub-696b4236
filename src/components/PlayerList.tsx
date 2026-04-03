@@ -118,13 +118,16 @@ function SortablePlayer({
         </span>
       )}
 
-      <span className={`font-semibold text-sm flex-1 tracking-wide transition-all
-        ${isDefeatedByJoker ? 'text-green-400/70 line-through' : ''}
-        ${isRacing && !isDefeatedByJoker ? 'neon-text-pink' : ''}
-        ${!isRacing && !isDefeatedByJoker ? 'text-foreground group-hover:neon-text-pink' : ''}
-      `}>
-          {player.name === 'Santi' ? 'Sant' : player.name === 'Rox' ? 'Rocxs' : player.name}
-      </span>
+      <div className="flex items-center gap-1.5 flex-1 min-w-0">
+        <span className={`font-semibold text-sm tracking-wide transition-all truncate
+          ${isDefeatedByJoker ? 'text-green-400/70 line-through' : ''}
+          ${isRacing && !isDefeatedByJoker ? 'neon-text-pink' : ''}
+          ${!isRacing && !isDefeatedByJoker ? 'text-foreground group-hover:neon-text-pink' : ''}
+        `}>
+          {player.name}
+        </span>
+        <RoleBadge playerName={player.name} />
+      </div>
 
       <div className="flex items-center gap-1.5 shrink-0">
         {/* Admin status control dropdown */}
