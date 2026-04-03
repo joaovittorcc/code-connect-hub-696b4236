@@ -277,6 +277,7 @@ const PlayerList = ({
   loggedNick,
   onSetPlayerStatus,
   jokerDefeatedIds = [],
+  onManagePilot,
 }: PlayerListProps) => {
   const [challengerIdx, setChallengerIdx] = useState<number | null>(null);
   const [selectedOpponentIdx, setSelectedOpponentIdx] = useState<number | null>(null);
