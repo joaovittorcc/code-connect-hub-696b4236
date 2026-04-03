@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import PlayerList from '@/components/PlayerList';
 import AdminPanel from '@/components/AdminPanel';
 import EloRankingTable from '@/components/EloRankingTable';
@@ -403,8 +403,8 @@ const Index = () => {
         {/* LISTA */}
         {activeTab === 'lista' && (
           <div className="animate-fade-in-up animate-fill-both">
-            {/* Initiation List - Full width on top */}
-            {initiationList && (
+            {/* Initiation List - Visible for Jokers/Admins, collapsible for completed pilots */}
+            {initiationList && (isJoker || isAdmin) && (
               <div className="max-w-md mx-auto mb-6 animate-fade-in-up animate-fill-both stagger-1">
                 <PlayerList
                   listId={initiationList.id}
@@ -420,6 +420,35 @@ const Index = () => {
                   onChallengeInitiation={(isExternal || isJoker) ? handleChallengeInitiation : undefined}
                   jokerDefeatedIds={isJoker ? jokerDefeatedIds : []}
                 />
+              </div>
+            )}
+
+            {/* Collapsed initiation list for non-joker pilots who completed it */}
+            {initiationList && !isJoker && !isAdmin && isRegistered && (
+              <div className="max-w-md mx-auto mb-6 animate-fade-in-up animate-fill-both stagger-1">
+                <details className="card-racing rounded-xl neon-border overflow-hidden">
+                  <summary className="bg-secondary/80 px-5 py-3 border-b border-border flex items-center gap-2 cursor-pointer hover:bg-secondary transition-colors list-none">
+                    <div className="h-2 w-2 rounded-full bg-muted-foreground/50" />
+                    <span className="text-xs font-bold tracking-[0.2em] uppercase font-['Orbitron'] text-muted-foreground">
+                      {initiationList.title}
+                    </span>
+                    <span className="ml-auto text-[10px] text-green-400 font-bold uppercase tracking-wider">✓ Concluída — clique para expandir</span>
+                  </summary>
+                  <PlayerList
+                    listId={initiationList.id}
+                    title={initiationList.title}
+                    players={initiationList.players}
+                    onChallenge={handleChallenge(initiationList.id)}
+                    onReorder={(a, b) => reorderPlayers(initiationList.id, a, b)}
+                    isInitiation
+                    isExternal={isExternal}
+                    isJoker={isJoker}
+                    isAdmin={isAdmin}
+                    loggedNick={loggedNick}
+                    onChallengeInitiation={undefined}
+                    jokerDefeatedIds={[]}
+                  />
+                </details>
               </div>
             )}
 
