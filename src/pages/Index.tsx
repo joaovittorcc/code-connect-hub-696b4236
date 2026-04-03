@@ -446,6 +446,7 @@ const Index = () => {
                     isAdmin={isAdmin}
                     loggedNick={loggedNick}
                     onSetPlayerStatus={isAdmin ? setPlayerStatus : undefined}
+                    onManagePilot={isAdmin ? setManagePilotName : undefined}
                   />
                 )}
               </div>
