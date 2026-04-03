@@ -40,6 +40,7 @@ interface PlayerListProps {
   loggedNick?: string | null;
   onSetPlayerStatus?: (playerId: string, status: 'available' | 'racing' | 'cooldown') => void;
   jokerDefeatedIds?: string[];
+  onManagePilot?: (playerName: string) => void;
 }
 
 function SortablePlayer({
