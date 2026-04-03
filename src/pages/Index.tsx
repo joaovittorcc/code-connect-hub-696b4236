@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import PlayerList from '@/components/PlayerList';
 import AdminPanel from '@/components/AdminPanel';
-import RankingTable from '@/components/RankingTable';
+import EloRankingTable from '@/components/EloRankingTable';
+import FriendlyPanel from '@/components/FriendlyPanel';
 import { useChampionship } from '@/hooks/useChampionship';
+import { useFriendly } from '@/hooks/useFriendly';
 import { toast } from '@/hooks/use-toast';
-import { LogIn, Crown, ListOrdered, Home, Trophy, Flag } from 'lucide-react';
+import { LogIn, Crown, ListOrdered, Home, Trophy, Flag, Flame } from 'lucide-react';
 import midclubLogo from '@/assets/midclub-logo.png';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { authenticateUser, type AuthUser } from '@/data/users';
 
-type TabId = 'inicio' | 'lista' | 'campeonato' | 'ranking';
+type TabId = 'inicio' | 'lista' | 'amistosos' | 'campeonato' | 'ranking';
 type CampeonatoSub = 'ativo' | 'historico';
 
 const Index = () => {
@@ -32,6 +34,17 @@ const Index = () => {
     getJokerProgress,
   } = useChampionship();
 
+  const {
+    matches: friendlyMatches,
+    pendingFriendly,
+    getPlayerElo,
+    createFriendlyChallenge,
+    approveFriendly,
+    rejectFriendly,
+    resolveFriendly,
+    getEloRanking,
+  } = useFriendly();
+
   const [activeTab, setActiveTab] = useState<TabId>('inicio');
   const [campeonatoSub, setCampeonatoSub] = useState<CampeonatoSub>('ativo');
   const [loginUser, setLoginUser] = useState('');
@@ -49,6 +62,15 @@ const Index = () => {
   const isAdmin = loggedAuth?.isAdmin ?? false;
   const isJoker = loggedAuth?.isJoker ?? false;
   const jokerDefeatedIds = loggedNick ? getJokerProgress(loggedNick) : [];
+
+  // Collect all unique player names from lists
+  const allPlayerNames = [...new Set(
+    lists
+      .filter(l => l.id !== 'initiation')
+      .flatMap(l => l.players.map(p => p.name))
+  )];
+
+  const eloRankings = getEloRanking(allPlayerNames);
 
   const handleLogin = () => {
     if (!loginUser.trim() || !loginPin.trim()) return;
@@ -97,6 +119,26 @@ const Index = () => {
     toast({ title: '🛡️ Cooldowns Limpos', description: 'Todos os pilotos estão disponíveis!' });
   };
 
+  const handleCreateFriendly = (challengerName: string, challengedName: string) => {
+    createFriendlyChallenge(challengerName, challengedName);
+    toast({ title: '🔥 Amistoso Criado!', description: 'Aguardando aprovação do Admin.' });
+  };
+
+  const handleApproveFriendly = () => {
+    approveFriendly();
+    toast({ title: '✅ Amistoso Aprovado!', description: 'A corrida pode começar!' });
+  };
+
+  const handleRejectFriendly = () => {
+    rejectFriendly();
+    toast({ title: '❌ Amistoso Rejeitado', variant: 'destructive' });
+  };
+
+  const handleResolveFriendly = (winnerName: string) => {
+    resolveFriendly(winnerName);
+    toast({ title: '🏆 Amistoso Finalizado!', description: `${winnerName} venceu! Pontuação ELO atualizada.` });
+  };
+
   const initiationList = lists.find(l => l.id === 'initiation');
   const list01 = lists.find(l => l.id === 'list-01');
   const list02 = lists.find(l => l.id === 'list-02');
@@ -104,6 +146,7 @@ const Index = () => {
   const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
     { id: 'inicio', label: 'INÍCIO', icon: <Home className="h-4 w-4" /> },
     { id: 'lista', label: 'LISTA', icon: <ListOrdered className="h-4 w-4" /> },
+    { id: 'amistosos', label: 'AMISTOSOS', icon: <Flame className="h-4 w-4" /> },
     { id: 'campeonato', label: 'CAMPEONATO', icon: <Flag className="h-4 w-4" /> },
     { id: 'ranking', label: 'RANKING', icon: <Trophy className="h-4 w-4" /> },
   ];
@@ -173,12 +216,12 @@ const Index = () => {
           </div>
 
           {/* Tab navigation */}
-          <nav className="flex gap-1 -mb-px">
+          <nav className="flex gap-1 -mb-px overflow-x-auto">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.15em] font-['Orbitron'] border-b-2 transition-all
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-2.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] font-['Orbitron'] border-b-2 transition-all whitespace-nowrap
                   ${activeTab === tab.id
                     ? 'border-primary text-primary neon-text-purple'
                     : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
@@ -208,13 +251,20 @@ const Index = () => {
               <div className="neon-line max-w-xs mx-auto animate-fade-in animate-fill-both stagger-3" />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto animate-fade-in-up animate-fill-both stagger-3">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto animate-fade-in-up animate-fill-both stagger-3">
               <Button
                 className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-primary/20 text-primary hover:bg-primary/30 border border-primary/30 font-['Orbitron'] hover-scale neon-border transition-all duration-300"
                 onClick={() => setActiveTab('lista')}
               >
                 <ListOrdered className="h-4 w-4 mr-2" />
                 Ver Listas
+              </Button>
+              <Button
+                className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 font-['Orbitron'] hover-scale transition-all duration-300"
+                onClick={() => setActiveTab('amistosos')}
+              >
+                <Flame className="h-4 w-4 mr-2" />
+                Amistosos
               </Button>
               <Button
                 className="flex-1 h-12 text-sm font-bold uppercase tracking-wider bg-accent/20 text-accent hover:bg-accent/30 border border-accent/30 font-['Orbitron'] hover-scale neon-border-pink transition-all duration-300"
@@ -291,6 +341,20 @@ const Index = () => {
                 <div className="pt-2 border-t border-border/50 text-[10px] text-muted-foreground/70 uppercase tracking-wider">
                   Regra temporária — válida até decisão fixa
                 </div>
+              </div>
+
+              {/* ELO Rules Card */}
+              <div className="card-racing rounded-xl neon-border p-5 space-y-3 border-orange-500/30 animate-fade-in-up animate-fill-both stagger-5">
+                <h4 className="text-sm font-bold uppercase tracking-[0.15em] text-orange-400 font-['Orbitron']">
+                  🔥 Sistema de Amistosos — ELO
+                </h4>
+                <ul className="space-y-1.5 text-sm text-muted-foreground">
+                  <li className="flex gap-2"><span className="text-orange-400">▸</span> Todos começam com <strong className="text-foreground">1000 pontos</strong> de base.</li>
+                  <li className="flex gap-2"><span className="text-orange-400">▸</span> Vencer alguém com <strong className="text-foreground">mais pontos</strong> → recompensa <strong className="text-foreground">maior</strong>.</li>
+                  <li className="flex gap-2"><span className="text-orange-400">▸</span> Vencer alguém com <strong className="text-foreground">menos pontos</strong> → recompensa <strong className="text-foreground">menor</strong>.</li>
+                  <li className="flex gap-2"><span className="text-orange-400">▸</span> Perder para alguém mais fraco → <strong className="text-destructive">penalidade maior</strong>.</li>
+                  <li className="flex gap-2"><span className="text-orange-400">▸</span> Qualquer piloto pode desafiar <strong className="text-foreground">qualquer outro</strong>.</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -370,6 +434,24 @@ const Index = () => {
           </div>
         )}
 
+        {/* AMISTOSOS */}
+        {activeTab === 'amistosos' && (
+          <div className="animate-fade-in-up animate-fill-both max-w-lg mx-auto">
+            <FriendlyPanel
+              allPlayerNames={allPlayerNames}
+              isAdmin={isAdmin}
+              loggedNick={loggedNick}
+              pendingFriendly={pendingFriendly}
+              getPlayerElo={getPlayerElo}
+              onCreateChallenge={handleCreateFriendly}
+              onApprove={handleApproveFriendly}
+              onReject={handleRejectFriendly}
+              onResolve={handleResolveFriendly}
+              matches={friendlyMatches}
+            />
+          </div>
+        )}
+
         {/* CAMPEONATO */}
         {activeTab === 'campeonato' && (
           <div className="animate-fade-in max-w-3xl mx-auto space-y-6">
@@ -410,7 +492,7 @@ const Index = () => {
         {/* RANKING */}
         {activeTab === 'ranking' && (
           <div className="animate-fade-in-up animate-fill-both max-w-3xl mx-auto">
-            <RankingTable lists={lists} challenges={challenges} />
+            <EloRankingTable rankings={eloRankings} matches={friendlyMatches} />
           </div>
         )}
       </main>
