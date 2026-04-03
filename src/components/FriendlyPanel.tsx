@@ -229,12 +229,13 @@ const FriendlyPanel = ({
 
       {/* Recent Matches */}
       {last5Matches.length > 0 && (
-        <div className="card-racing rounded-xl neon-border overflow-hidden">
+      <div className="card-racing rounded-xl neon-border overflow-hidden hover-lift">
           <div className="bg-secondary/80 px-5 py-4 border-b border-border flex items-center gap-2">
             <Swords className="h-4 w-4 text-accent" />
             <h2 className="text-xs font-bold tracking-[0.2em] uppercase neon-text-pink font-['Orbitron']">
               Últimos Amistosos
             </h2>
+            <span className="ml-1 kanji-accent text-[10px] text-accent/30">中</span>
           </div>
           <div className="divide-y divide-border/50">
             {last5Matches.map(match => (
