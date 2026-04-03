@@ -57,6 +57,7 @@ function SortablePlayer({
   isValidTarget,
   onSetPlayerStatus,
   isDefeatedByJoker,
+  onManagePilot,
 }: {
   player: Player;
   index: number;
