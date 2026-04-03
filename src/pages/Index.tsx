@@ -88,7 +88,7 @@ const Index = () => {
       toast({ title: '🚫 Acesso Negado', description: 'Usuário ou Senha incorretos.', variant: 'destructive' });
       return;
     }
-    const displayName = loginUser.trim();
+    const displayName = user.displayName;
     setLoggedNick(displayName);
     setLoggedAuth(user);
     localStorage.setItem('mc-pilot-nick', displayName);
