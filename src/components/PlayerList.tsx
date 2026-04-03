@@ -377,6 +377,7 @@ const PlayerList = ({
                 }
                 onSetPlayerStatus={onSetPlayerStatus}
                 isDefeatedByJoker={isJoker && jokerDefeatedIds.includes(player.id)}
+                onManagePilot={onManagePilot}
               />
             ))}
           </ul>
