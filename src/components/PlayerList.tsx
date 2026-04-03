@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Player } from '@/types/championship';
-import { Clock, Swords, Zap, Crown, Shield, Settings2, Check } from 'lucide-react';
+import { Clock, Swords, Zap, Crown, Shield, Settings2, Check, UserCog } from 'lucide-react';
+import RoleBadge from '@/components/RoleBadge';
 import { Button } from '@/components/ui/button';
 import {
   DndContext,
