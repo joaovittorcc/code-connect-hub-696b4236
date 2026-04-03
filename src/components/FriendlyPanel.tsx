@@ -218,10 +218,10 @@ const FriendlyPanel = ({
                 }`}>
                   {i + 1}
                 </span>
-                <span className={`text-xs font-semibold flex-1 ${i === 0 ? 'neon-text-pink' : ''}`}>
+                <span className={`text-xs font-semibold flex-1 ${i === 0 ? 'neon-text-gold font-bold' : ''}`}>
                   {entry.name}
                 </span>
-                <span className="text-xs font-bold font-['Orbitron'] text-primary">{entry.elo}</span>
+                <span className={`text-xs font-bold font-['Orbitron'] ${i === 0 ? 'neon-text-purple' : 'text-primary'}`}>{entry.elo}</span>
               </div>
             ))}
         </div>
