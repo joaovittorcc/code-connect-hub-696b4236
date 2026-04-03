@@ -166,7 +166,19 @@ function SortablePlayer({
           </DropdownMenu>
         )}
 
-        {/* Initiation: show Desafiar for joker/external — but NOT if already defeated */}
+        {/* Admin: Manage Pilot button */}
+        {isAdmin && !isInitiation && onManagePilot && (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-6 w-6 p-0 text-muted-foreground hover:text-accent"
+            onClick={e => { e.stopPropagation(); onManagePilot(player.name); }}
+          >
+            <UserCog className="h-3 w-3" />
+          </Button>
+        )}
+
+
         {isLoggedIn && isInitiation && (isExternal || isJoker) && onChallengeInitiation && !isDefeatedByJoker && (
           <Button
             size="sm"
