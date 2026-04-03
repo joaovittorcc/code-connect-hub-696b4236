@@ -56,6 +56,4 @@ export interface ChampionshipState {
   lists: PlayerList[];
   challenges: Challenge[];
   jokerProgress: JokerProgress;
-  friendlyMatches: FriendlyMatch[];
-  eloRatings: EloRatings;
 }
