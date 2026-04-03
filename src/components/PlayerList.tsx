@@ -72,6 +72,7 @@ function SortablePlayer({
   isValidTarget: boolean;
   onSetPlayerStatus?: (playerId: string, status: 'available' | 'racing' | 'cooldown') => void;
   isDefeatedByJoker?: boolean;
+  onManagePilot?: (playerName: string) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: player.id, disabled: !isAdmin });
   const style = { transform: CSS.Transform.toString(transform), transition };
